@@ -1,70 +1,59 @@
 #pragma once
 #include <iostream>
-
 using namespace std;
 
 template <class T> class Array
 {
 private:
-	T* Array;
+	T* mas;
 	int size;
 public:
-
-	Array() : Array(T(), 3) {}
-
+	 Array() : Array(nullptr, 3) {}
 	//главный конструктор
-	Array(const T* array_p, const int size_p) : Array{ new T * [size_p] }, size{ size_p }
+	 template <class T> Array(const T* array_p, const int size_p);
+	//конструктор копировани€
+	Array(const Array& array_p) : mas(new T[array_p.size]), size{ array_p.size }
 	{
-		if (array_p)
+		if (this != array_p)
 		{
 			for (int i = 0; i < size; i++)
 			{
-				Array[i] = array_p[i];
+				mas[i] = array_p.mas[i];
 			}
 		}
 	}
-
-	//конструктор копировани€
-	Array(const Array& array_p) : Array(new T* [array_p.size]), size{ array_p.size }
-	{
-
-		for (int i = 0; i < size; i++)
-		{
-				Array[i] = array_p.Array[i];
-		}
-	}
-
 	//конструктор переноса
-	Array(Array&& array_p) : Array(new T* [array_p.size]), size{ array_p.size }
+	Array(Array&& array_p) : mas(new T[array_p.size]), size{ array_p.size }
 	{
-		Array = array_p.Array;
+		if (this != array_p)
+		{
+			mas = array_p.mas;
 
-		array_p.Array = nullptr;
+			array_p.mas = nullptr;
+		}
 	}
 
 	//аксессоры и модификаторы
-	void set_matrix(const T* array_p, const int size_p)
+	void set_mas(const T* array_p, const int size_p)
 	{
-		delete[] Array;
+		delete[] mas;
 
 		size = size_p;
 
-		Array = new T * [size];
+		mas = new T * [size];
 
 		if (array_p)
 		{
 			for (int i = 0; i < size; i++)
 			{
-				Array[i] = array_p[i];
+				mas[i] = array_p[i];
 			}
 		}
 	}
-
-	const T* get_matrix()const
+	const T* get_mas()const
 	{
-		return Array;
+		return mas;
 	}
-
 	int get_size() const
 	{
 		return size;
@@ -76,36 +65,34 @@ public:
 		cout << "\n ћассив \n";
 		for (int i = 0; i < size; i++)
 		{
-		cout << Array[i] << " ";
+		cout << mas[i] << " ";
 		}
 	}
-
-
 	//ищет максимальный элемент
 	void max()
 	{
-		T max_number = Array[0];
+		T max_number = mas[0];
 
 		for (int i = 0; i < size; i++)
 		{
-			if (Array[i] > max_number)
+			if (mas[i] > max_number)
 			{
-				max_number = Array[i];
+				max_number = mas[i];
 			}
 		}
+		
 		cout << "\nмаксимальное число " << max_number;
 	}
-
 	//ищет минимальный элемент
 	void min()
 	{
-		T min_number = Array[0];
+		T min_number = mas[0];
 
 		for (int i = 0; i < size; i++)
 		{
-			if (Array[i] < min_number)
+			if (mas[i] < min_number)
 			{
-				min_number = Array[i];
+				min_number = mas[i];
 			}
 		}
 		cout << "\nминимальное число " << min_number;
@@ -113,44 +100,39 @@ public:
 
 	friend istream& operator>>(istream& cin, Array array_p)
 	{
-		for (int i = 0; i < array_p.size; i++)
-		{
-			cin >> array_p.Array[i];
-		}
+		cin >> array_p.mas;
 
 		return cin;
 	}
-
 	friend ostream& operator<<(ostream& cout, const Array& array_p)
 	{
 		for (int i = 0; i < array_p.size; i++)
 		{
-			cout >> array_p.Array[i];
+			cout >> array_p.mas[i];
 		}
 
 		return cout;
 	}
-
 	//перегрузка оператора копирующего присваивани€
 	const Array& operator=(const Array& array_p)
 	{
 		if (&array_p != this)
 		{
-			delete[] array;
+			delete[] mas;
 
-			array = new T * [size];
+			mas = new T * [size];
 
 			for (int i = 0; i < size; i++)
 			{
-				array[i] = array_p.Array[i];
+				mas[i] = array_p.mas[i];
 			}
 		}
 		return *this;
 	}
-
+	
 	~Array()
 	{
-		delete[] Array;
+		delete[] mas;
 	}
 };
-
+#include "array.inl"
