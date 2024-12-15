@@ -4,7 +4,7 @@ int main()
 {
 	setlocale(LC_ALL, "rus");
 
-	int user;
+	int user, value;
 
 	Array <int> mas;
 
@@ -24,7 +24,18 @@ int main()
 		case MIN:
 			mas.min();
 			break;
+		case SEARCH:
+			cout << mas; 
 
+			cout << "\nвведите значение, которое хотите найти\n";
+			cin >> value;
+
+			mas.find(value);
+			break;
+		case ADD:
+			cout << "\nвведите значение\n";
+			cin >> value;
+			mas.add(value);
 		default:
 			break;
 		}

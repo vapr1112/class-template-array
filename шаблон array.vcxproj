@@ -130,8 +130,10 @@
     <ClInclude Include="array.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="array.inl" />
     <ClCompile Include="Source.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="header.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
