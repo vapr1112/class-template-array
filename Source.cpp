@@ -8,7 +8,7 @@ int main()
 
 	Array <int> mas, mas_2;
 
-	Array<string> mas_3;
+	Array<char*> mas_3;
 
 	char buf[100];
 
@@ -48,7 +48,7 @@ int main()
 			break;
 		case DELETE:
 			//mas.del();
-			mas_3.del(4);
+			mas_3.del();
 			break;
 		case COPY:
 			mas_2.copy(mas);

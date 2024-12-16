@@ -143,6 +143,7 @@ template <class T> void Array<T>::copy(Array<T>& array_p)
 	}
 }
 
+//перегрузка операторов
 template <typename T> istream& operator>>(istream& cin, Array<T> array_p)
 {
 	cin >> array_p.mas;
@@ -174,4 +175,37 @@ template<typename T> const Array<T>& Array<T>:: operator=(const Array<T>& array_
 		}
 	}
 	return *this;
+}
+
+template<typename T> Array<T>&& Array<T>:: operator=(Array<T>&& array_p)
+{
+	if (this != array_p)
+	{
+		delete[] mas;
+
+		size = array_p.size;
+
+		mas = new T[size];
+
+		mas = array_p.mas;
+
+		mas = array_p.mas;
+
+		array_p.mas = nullptr;
+
+		array_p.size = 0;
+	}
+	return *this;
+}
+
+template<typename T> T* Array<T>:: operator[](const int indx)
+{
+	assert(indx > 0 && indx < size && "\n недопустимый индекс \n");
+	return mas[indx];
+}
+
+template<typename T> T* Array<T>:: operator[](const int indx)const
+{
+	assert(indx > 0 && indx < size && "\n недопустимый индекс \n");
+	return mas[indx];
 }

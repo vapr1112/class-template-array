@@ -10,7 +10,7 @@ public:
 	{
 		cout << mas;
 	}
-
+	//ищет подстроку
 	void find(string under_str)
 	{
 		if (mas.find(under_str) != string::npos)
@@ -114,6 +114,7 @@ public:
 		for (int i = 0; i < size; i++)
 		{
 			puts(mas[i]);
+			cout << " ";
 		}
 	}
 
@@ -121,6 +122,7 @@ public:
 
 	void min() = delete;
 
+	//ищет подстроку
 	void find(char* str)
 	{
 		for (int i = 0; i < size; i++)
@@ -134,27 +136,24 @@ public:
 		cout << "\nстрока не найдена\n";
 	}
 
+	//добавляет в конец строку в массив строк
 	void add(char* str)
 	{
 
-		char** new_mas = new char* [++size];
+		char** new_str = new char* [++size];
 
 		for (int i = 0; i < size - 1; i++)
 		{
-			new_mas[i] = new char[strlen(mas[i]) + 1];
+			new_str[i] = new char[strlen(mas[i]) + 1];
+			strcpy_s(new_str[i], strlen(mas[i]) + 1, mas[i]);
 		}
 
-		for (int i = 0; i < size - 1; i++)
-		{
-			strcpy_s(new_mas[i], strlen(mas[i]) + 1, mas[i]);
-		}
-
-		new_mas[size - 1] = new char[strlen(str) + 1];
-		strcpy_s(new_mas[size - 1], strlen(str) + 1, str);
+		new_str[size - 1] = new char[strlen(str) + 1];
+		strcpy_s(new_str[size - 1], strlen(str) + 1, str);
 
 		if (size != 1)
 		{
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size - 1; i++)
 			{
 				delete[] mas[i];
 			}
@@ -162,8 +161,9 @@ public:
 			delete[] mas;
 		}
 
-		mas = new_mas;
+		mas = new_str;
 	}
+	//удаляет последнюю строку из массива строк
 	void del()
 	{
 
@@ -172,12 +172,12 @@ public:
 		for (int i = 0; i < size; i++)
 		{
 			new_mas[i] = new char[strlen(mas[i]) + 1];
-			strcpy_s(new_mas[i], strlen(mas[i] + 1), mas[i]);
+			strcpy_s(new_mas[i], strlen(mas[i]) + 1, mas[i]);
 		}
 
 		if (size != 0)
 		{
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < size + 1; i++)
 			{
 				delete[] mas[i];
 			}
@@ -194,7 +194,7 @@ public:
 		{
 			for (int i = 0; i < size; i++)
 			{
-				mas[i] = new char[strlen(mas_p[i] + 1)];
+				mas[i] = new char[strlen(mas_p[i]) + 1];
 				strcpy_s(mas[i], strlen(mas_p[i] + 1), mas_p[i]);
 			}
 		}
