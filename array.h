@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <cassert>
+#include <string.h>
+
 using namespace std;
 
 template <class T> class Array
@@ -38,27 +40,16 @@ public:
 
 	void del();
 
+	void copy(Array<T>& array_p);
+
 	template <typename T> friend istream& operator>>(istream& cin, Array<T> array_p);
 
 	template <typename T> friend ostream& operator<<(ostream& cout, const Array<T>& array_p);
 
 	//перегрузка оператора копирующего присваивания
 
-	template<typename T> const Array<T>& operator=(const Array<T>& array_p)
-	{
-		if (&array_p != this)
-		{
-			delete[] mas;
+	template<typename T> const Array<T>& operator=(const Array<T>& array_p);
 
-			mas = new T * [size];
-
-			for (int i = 0; i < size; i++)
-			{
-				mas[i] = array_p.mas[i];
-			}
-		}
-		return *this;
-	}
 	Array&& operator=(Array&& array_p)
 {
 	if (this != array_p)
@@ -94,5 +85,7 @@ public:
 
 	~Array(){delete[] mas;}
 };
-#include "header.inl"
 
+#include "spec_template.inl"
+
+#include "header.inl"

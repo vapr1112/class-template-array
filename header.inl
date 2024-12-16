@@ -56,6 +56,7 @@ template <class T> void Array<T>::print()
 	}
 }
 
+//ищет максимальный элемент
 template <class T> void Array<T>::max()
 {
 	T max_number = mas[0];
@@ -71,6 +72,7 @@ template <class T> void Array<T>::max()
 	cout << "\nмаксимальное число " << max_number;
 }
 
+//ищет минимальный элемент
 template <class T> void Array<T>::min()
 {
 	T min_number = mas[0];
@@ -85,11 +87,12 @@ template <class T> void Array<T>::min()
 	cout << "\nминимальное число " << min_number;
 }
 
+//ищет элеммент
 template <class T> void Array<T>::find(T element)
 {
 	for (int i = 0; i < size; i++)
 	{
-		if (mas[i] = element)
+		if (mas[i] == element)
 		{
 			cout << "\n элемент найден\n";
 			return;
@@ -98,10 +101,10 @@ template <class T> void Array<T>::find(T element)
 	cout << "\nэлемент не найден\n";
 }
 
+//добавляет эдемент в конец массива
 template <class T> void Array<T>::add(T element)
-{
-	size++;
-	T* new_mas = new T[size];
+{	
+	T* new_mas = new T[++size];
 
 	for (int i = 0; i < size - 1; i++)
 	{
@@ -115,11 +118,10 @@ template <class T> void Array<T>::add(T element)
 	mas = new_mas;
 }
 
+//удаляет элемент из конца массива
 template <class T> void Array<T>::del()
 {
-	size--;
-
-	T* new_mas = new T[size];
+	T* new_mas = new T[--size];
 
 	for (int i = 0; i < size; i++)
 	{
@@ -129,6 +131,16 @@ template <class T> void Array<T>::del()
 	delete[] mas;
 
 	mas = new_mas;
+}
+
+//копирует объект
+template <class T> void Array<T>::copy(Array<T>& array_p)
+{
+	size = array_p.size;
+	for (int i = 0; i < size; i++)
+	{
+		mas[i] = array_p.mas[i];
+	}
 }
 
 template <typename T> istream& operator>>(istream& cin, Array<T> array_p)
@@ -148,24 +160,18 @@ template <typename T> ostream& operator<<(ostream& cout, const Array<T>& array_p
 	return cout;
 }
 
-//template<typename T> const Array<T>&  operator=(const Array<T>& array_p)
-//{
-//	if (&array_p != this)
-//	{
-//		delete[] mas;
-//
-//		mas = new T * [size];
-//
-//		for (int i = 0; i < size; i++)
-//		{
-//			mas[i] = array_p.mas[i];
-//		}
-//	}
-//	return *this;
-//}
-//
-//template <typename T> T* Array<T>:: operator[](const int indx)
-//{
-//	assert(indx > 0 && indx < size && "\n недопустимый индекс \n");
-//	return mas[indx];
-//}
+template<typename T> const Array<T>& Array<T>:: operator=(const Array<T>& array_p)
+{
+	if (&array_p != this)
+	{
+		delete[] mas;
+
+		mas = new T * [size];
+
+		for (int i = 0; i < size; i++)
+		{
+			mas[i] = array_p.mas[i];
+		}
+	}
+	return *this;
+}
