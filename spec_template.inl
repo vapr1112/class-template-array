@@ -6,36 +6,50 @@ private:
 	size_t size;
 
 public:
-	void print()
+	Array()noexcept : Array(nullptr, 0) {}
+
+	Array(string mas_p, const size_t size_p)noexcept : mas{ mas_p }, size{ size_p }{}
+
+	void print()const noexcept
 	{
 		cout << mas;
 	}
+
+
 	//ищет подстроку
-	void find(string under_str)
+	bool find(string under_str)
 	{
+		if (size = 0) throw empty_mas("массив пуст");
+
 		if (mas.find(under_str) != string::npos)
 		{
-			cout << "\nподстрока найдена\n";
+			return 1;
 		}
 		else
 		{
-			cout << "\nподстрока не найдена\n";
+			return 0;
 		}
 	}
+	void max() = delete;
 
-	void add(string str)
-	{
-		mas.append(str);
-	}
+	void min() = delete;
+	void add(string str)noexcept{mas.append(str);}
 
 	void del(size_t pos)
 	{
+		if (mas.empty()) throw empty_mas("массив пуст");
 		mas.erase(pos);
 	}
 
 	void copy(string str)
 	{
+		if (mas.empty()) throw empty_mas("массив пуст");
 		mas = str;
+	}
+
+	const Array& operator=(const Array& array_p)noexcept
+	{
+		mas = array_p.mas;
 	}
 };
 
@@ -49,9 +63,9 @@ private:
 
 public:
 
-	Array() : Array(nullptr, 0) {}
+	Array()noexcept : Array(nullptr, 0) {}
 
-	Array(const char** mas_p, const int size_p) : mas{ new char* [size_p] }, size{ size_p }
+	Array(const char** mas_p, const int size_p)noexcept : mas{ new char* [size_p] }, size{ size_p }
 	{
 		if (mas_p)
 		{
@@ -63,7 +77,7 @@ public:
 		}
 	}
 
-	Array(const Array& mas_p) : mas(new char* [mas_p.size]), size{ mas_p.size }
+	Array(const Array& mas_p)noexcept : mas(new char* [mas_p.size]), size{ mas_p.size }
 	{
 
 		for (int i = 0; i < size; i++)
@@ -73,7 +87,7 @@ public:
 		}
 	}
 
-	Array(Array&& mas_p) : mas(new char* [mas_p.size]), size{ mas_p.size }
+	Array(Array&& mas_p)noexcept : mas(new char* [mas_p.size]), size{ mas_p.size }
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -88,7 +102,7 @@ public:
 		mas_p.size = 0;
 	}
 
-	void set_matrix(const char** mas_p, const int size_p)
+	void set_matrix(const char** mas_p, const int size_p)noexcept
 	{
 
 		for (int i = 0; i < size; i++)
@@ -109,7 +123,7 @@ public:
 		}
 	}
 
-	void print()
+	void print()const noexcept
 	{
 		for (int i = 0; i < size; i++)
 		{
@@ -125,6 +139,7 @@ public:
 	//ищет подстроку
 	void find(char* str)
 	{
+		if (size == 0) throw empty_mas("массив пуст");
 		for (int i = 0; i < size; i++)
 		{
 			if (strstr(mas[i], str) != 0)
@@ -137,7 +152,7 @@ public:
 	}
 
 	//добавляет в конец строку в массив строк
-	void add(char* str)
+	void add(char* str)noexcept
 	{
 
 		char** new_str = new char* [++size];
@@ -166,7 +181,7 @@ public:
 	//удаляет последнюю строку из массива строк
 	void del()
 	{
-
+		if (size == 0) throw empty_mas("массив пуст");
 		char** new_mas = new char* [--size];
 
 		for (int i = 0; i < size; i++)
@@ -190,6 +205,7 @@ public:
 
 	void copy(char** mas_p)
 	{
+		if (size == 0) throw empty_mas("массив пуст");
 		if (mas_p)
 		{
 			for (int i = 0; i < size; i++)
@@ -197,6 +213,15 @@ public:
 				mas[i] = new char[strlen(mas_p[i]) + 1];
 				strcpy_s(mas[i], strlen(mas_p[i] + 1), mas_p[i]);
 			}
+		}
+	}
+
+	const Array& operator=(const Array& array_p)noexcept
+	{
+		for (int i = 0; i < size; i++)
+		{
+			mas[i] = new char[strlen(array_p.mas[i]) + 1];
+			strcpy_s(mas[i], strlen(array_p.mas[i] + 1), array_p.mas[i]);
 		}
 	}
 };

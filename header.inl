@@ -1,4 +1,4 @@
-template <class T> Array<T>::Array(const T* array_p, const int size_p) : mas{ new T[size_p] }, size{ size_p }
+template <class T> Array<T>::Array(const T* array_p, const size_t size_p)noexcept : mas{ new T[size_p] }, size{ size_p }
 {
 	if (array_p)
 	{
@@ -9,7 +9,7 @@ template <class T> Array<T>::Array(const T* array_p, const int size_p) : mas{ ne
 	}
 }
 
-template <class T> Array<T>::Array(const Array& array_p) : mas(new T[array_p.size]), size{ array_p.size }
+template <class T> Array<T>::Array(const Array& array_p)noexcept : mas(new T[array_p.size]), size{ array_p.size }
 {
 	if (this != array_p)
 	{
@@ -20,17 +20,18 @@ template <class T> Array<T>::Array(const Array& array_p) : mas(new T[array_p.siz
 	}
 }
 
-template <class T> Array<T>::Array(Array&& array_p) : mas(new T[array_p.size]), size{ array_p.size }
+template <class T> Array<T>::Array(Array&& array_p)noexcept : mas(new T[array_p.size]), size{ array_p.size }
 {
 	if (this != array_p)
 	{
 		mas = array_p.mas;
 
 		array_p.mas = nullptr;
+		array_p.size = 0;
 	}
 }
 
-template <class T> void Array<T>::set_mas(const T* array_p, const int size_p)
+template <class T> void Array<T>::set_mas(const T* array_p, const size_t size_p)
 {
 	delete[] mas;
 
@@ -47,7 +48,7 @@ template <class T> void Array<T>::set_mas(const T* array_p, const int size_p)
 	}
 }
 
-template <class T> void Array<T>::print()
+template <class T> void Array<T>::print()const noexcept
 {
 	cout << "\n Массив \n";
 	for (int i = 0; i < size; i++)
@@ -59,6 +60,7 @@ template <class T> void Array<T>::print()
 //ищет максимальный элемент
 template <class T> void Array<T>::max()
 {
+	if (size = 0) throw empty_mas("массив пуст");
 	T max_number = mas[0];
 
 	for (int i = 0; i < size; i++)
@@ -75,6 +77,7 @@ template <class T> void Array<T>::max()
 //ищет минимальный элемент
 template <class T> void Array<T>::min()
 {
+	if (size = 0) throw empty_mas("массив пуст");
 	T min_number = mas[0];
 
 	for (int i = 0; i < size; i++)
@@ -88,21 +91,21 @@ template <class T> void Array<T>::min()
 }
 
 //ищет элеммент
-template <class T> void Array<T>::find(T element)
+template <class T> bool Array<T>::find(T element)
 {
+	if (size = 0) throw empty_mas("массив пуст");
 	for (int i = 0; i < size; i++)
 	{
 		if (mas[i] == element)
 		{
-			cout << "\n элемент найден\n";
-			return;
+			return 1;
 		}
 	}
-	cout << "\nэлемент не найден\n";
+	return 0;
 }
 
 //добавляет эдемент в конец массива
-template <class T> void Array<T>::add(T element)
+template <class T> void Array<T>::add(T element)noexcept
 {	
 	T* new_mas = new T[++size];
 
@@ -121,6 +124,7 @@ template <class T> void Array<T>::add(T element)
 //удаляет элемент из конца массива
 template <class T> void Array<T>::del()
 {
+	if (size = 0) throw empty_mas("массив пуст");
 	T* new_mas = new T[--size];
 
 	for (int i = 0; i < size; i++)
@@ -136,6 +140,7 @@ template <class T> void Array<T>::del()
 //копирует объект
 template <class T> void Array<T>::copy(Array<T>& array_p)
 {
+	if (array_p.size = 0) throw empty_mas("массив пуст");
 	size = array_p.size;
 	for (int i = 0; i < size; i++)
 	{
@@ -144,14 +149,17 @@ template <class T> void Array<T>::copy(Array<T>& array_p)
 }
 
 //перегрузка операторов
-template <typename T> istream& operator>>(istream& cin, Array<T> array_p)
+template <typename T> istream& operator>>(istream& cin, Array<T> array_p)noexcept
 {
-	cin >> array_p.mas;
+	for (size_t i = 0; i < size; i++)
+	{
+		cin >> array_p.mas;
+	}
 
 	return cin;
 }
 
-template <typename T> ostream& operator<<(ostream& cout, const Array<T>& array_p)
+template <typename T> ostream& operator<<(ostream& cout, const Array<T>& array_p)noexcept
 {
 	for (int i = 0; i < array_p.size; i++)
 	{
@@ -161,7 +169,7 @@ template <typename T> ostream& operator<<(ostream& cout, const Array<T>& array_p
 	return cout;
 }
 
-template<typename T> const Array<T>& Array<T>:: operator=(const Array<T>& array_p)
+template<typename T> const Array<T>& Array<T>:: operator=(const Array<T>& array_p)noexcept
 {
 	if (&array_p != this)
 	{
@@ -177,7 +185,7 @@ template<typename T> const Array<T>& Array<T>:: operator=(const Array<T>& array_
 	return *this;
 }
 
-template<typename T> Array<T>&& Array<T>:: operator=(Array<T>&& array_p)
+template<typename T> Array<T>&& Array<T>:: operator=(Array<T>&& array_p) noexcept
 {
 	if (this != array_p)
 	{
@@ -200,12 +208,12 @@ template<typename T> Array<T>&& Array<T>:: operator=(Array<T>&& array_p)
 
 template<typename T> T* Array<T>:: operator[](const int indx)
 {
-	assert(indx > 0 && indx < size && "\n недопустимый индекс \n");
+	if (indx < 0 || indx > size) throw out_of_range("недопустимый индекс");
 	return mas[indx];
 }
 
 template<typename T> T* Array<T>:: operator[](const int indx)const
 {
-	assert(indx > 0 && indx < size && "\n недопустимый индекс \n");
+	if (indx < 0 || indx > size) throw out_of_range("недопустимый индекс");
 	return mas[indx];
 }
